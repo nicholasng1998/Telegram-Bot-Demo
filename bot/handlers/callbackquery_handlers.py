@@ -1,46 +1,63 @@
 from telegram import (
     InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    ChatAction
+    InlineKeyboardMarkup
 )
+from bot.config import LOGGING_FORMAT
 import time
 import logging
 
+logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
+
 
 def catalog(update, context):
+    logging.info("User: Press Catalog")
     keyboard = [
-        [InlineKeyboardButton('Pizza', callback_data='pizza'), InlineKeyboardButton('Sticks', callback_data='sticks')],
-        [InlineKeyboardButton('Beverages', callback_data='beverages')]
+        [InlineKeyboardButton('🍕 Pizza', callback_data='pizza'), InlineKeyboardButton('🥖 Sticks', callback_data='sticks')],
+        [InlineKeyboardButton('🍹 Beverages', callback_data='beverages')]
     ]
-    update.callback_query.message.edit_text('Catalog \nThis is the main directory',
-                                            reply_markup=InlineKeyboardMarkup(keyboard))
+
+    reply_text = "📒 Catalog \nThis is the main directory"
+    logging.info("Bot: " + reply_text)
+    update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 def pizza(update, context):
+    logging.info("User: Press 🍕 Pizza")
     keyboard = [
         [InlineKeyboardButton('Catalog', callback_data='catalog')],
-        [InlineKeyboardButton('Large 14', switch_inline_query_current_chat="Large"), InlineKeyboardButton('Medium 12', switch_inline_query_current_chat='Medium')],
-        [InlineKeyboardButton('Small 9', switch_inline_query_current_chat='Small')]
+        [InlineKeyboardButton('Large 14', switch_inline_query_current_chat="pizza large"),
+         InlineKeyboardButton('Medium 12', switch_inline_query_current_chat='pizza medium')],
+        [InlineKeyboardButton('Small 9', switch_inline_query_current_chat='pizza small')]
     ]
-    update.callback_query.message.edit_text('Choose your pizza size',
-                                            reply_markup=InlineKeyboardMarkup(keyboard))
+
+    reply_text = "Choose your pizza size: "
+    logging.info("Bot: " + reply_text)
+    update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 def sticks(update, context):
-    update.message.reply_text('sticks')
+    logging.info("User: Press 🥖 Sticks")
+    keyboard = [
+        [InlineKeyboardButton('Catalog', callback_data='catalog')],
+        [InlineKeyboardButton('Garlic Twisty Bread', switch_inline_query_current_chat="garlic twisty bread"),
+         InlineKeyboardButton('Cheesy Cheddar Stix', switch_inline_query_current_chat="chessy cheddar stix")]
+    ]
+
+    reply_text = "Choose your stix: "
+    logging.info("Bot: " + reply_text)
+    update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 def beverages(update, context):
+    logging.info("User: Press 🍹 Beverages")
     keyboard = [
         [InlineKeyboardButton('Catalog', callback_data='catalog')],
-        [InlineKeyboardButton('Soda', switch_inline_query_current_chat="soda beverage")]
+        [InlineKeyboardButton('Soda', switch_inline_query_current_chat="soda")]
     ]
-    update.callback_query.message.edit_text('Choose your beverages',
-                                            reply_markup=InlineKeyboardMarkup(keyboard))
 
-
-def soda(update, context):
-    update.callback_query.message.reply_text('soda')
+    reply_text = "Choose your drinks: "
+    logging.info("Bot: " + reply_text)
+    update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 def large(update, context):
@@ -60,10 +77,6 @@ def add_cart(update, context):
 
 
 def place_order(update, context):
-    print(update)
-    print(dir(update))
-    print(context)
-    print(dir(context))
     context.user_data['addressRequired'] = True
     update.callback_query.message.reply_text('Please send me your address as example below. (Address: No 1, Lorong ..)')
 
@@ -81,7 +94,8 @@ def confirm(update, context):
         [InlineKeyboardButton('Cash to the courier', callback_data='cashToCourier')]
     ]
     context.user_data['addressRequired'] = False
-    context.bot.send_message(chat_id=update.effective_user.id, text=reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
+    context.bot.send_message(chat_id=update.effective_user.id, text=reply_text,
+                             reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 def cash_to_courier(update, context):
@@ -104,7 +118,5 @@ def accept(update, context):
     time.sleep(2)
     context.bot.send_message(chat_id=update.effective_user.id, text="Your order has been submitted for delivery!")
     time.sleep(2)
-    context.bot.send_message(chat_id=update.effective_user.id, text="Your order has been successfully delivered! Thank you for using our service. Do not forget to share with your friend.")
-
-
-
+    context.bot.send_message(chat_id=update.effective_user.id,
+                             text="Your order has been successfully delivered! Thank you for using our service. Do not forget to share with your friend.")

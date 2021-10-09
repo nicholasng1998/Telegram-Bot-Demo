@@ -8,6 +8,7 @@ import pathlib
 import io
 from PIL import Image
 from bot.utils import image
+from bot.config import LOGGING_FORMAT
 import logging
 from bot.handlers import (
     command_handlers,
@@ -16,9 +17,7 @@ from bot.handlers import (
     callbackquery_handlers
 )
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                     level=logging.INFO)
-
+logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
 
 # def first_menu_keyboard():
@@ -145,7 +144,6 @@ def main():
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.pizza, pattern='pizza'))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.sticks, pattern='sticks'))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.beverages, pattern='beverages'))
-    dp.add_handler(CallbackQueryHandler(callbackquery_handlers.soda, pattern='soda'))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.large, pattern='large'))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.medium, pattern='medium'))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.small, pattern='small'))

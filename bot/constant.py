@@ -1,3 +1,8 @@
+"""
+    Emoji can be found from url below:
+    https://www.iemoji.com/
+"""
+
 # KeyBoard Menu
 CATALOG = "📒 Catalog"
 ORDER_HISTORY = "📄 Order History"

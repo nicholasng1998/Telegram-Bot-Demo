@@ -2,6 +2,7 @@ from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup
 )
+from bot import constant
 from bot.config import LOGGING_FORMAT
 import time
 import logging
@@ -25,7 +26,7 @@ def pizza(update, context):
     logging.info("User: Press 🍕 Pizza")
     keyboard = [
         [InlineKeyboardButton('Catalog', callback_data='catalog')],
-        [InlineKeyboardButton('Large 14', switch_inline_query_current_chat="pizza large"),
+        [InlineKeyboardButton('Large 14', switch_inline_query_current_chat="Large"),
          InlineKeyboardButton('Medium 12', switch_inline_query_current_chat='pizza medium')],
         [InlineKeyboardButton('Small 9', switch_inline_query_current_chat='pizza small')]
     ]
@@ -55,6 +56,8 @@ def beverages(update, context):
         [InlineKeyboardButton('Soda', switch_inline_query_current_chat="soda")]
     ]
 
+    context.bot.answer_callback_query(callback_query_id=update.callback_query.id, text="processing...")
+
     reply_text = "Choose your drinks: "
     logging.info("Bot: " + reply_text)
     update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
@@ -73,7 +76,28 @@ def small(update, context):
 
 
 def add_cart(update, context):
-    context.user_data['cart'].append(update.callback_query.data)
+    logging.info("User: add to cart")
+
+    if constant.CART_ARRAY not in context.user_data:
+        logging.info("DEBUGGER: cart is not in context user data")
+        chat_id = update.effective_user.id
+
+        reply_text = "Your previous session has ended. Please type /start to restart the session. Thank you~"
+        logging.info("Bot: " + reply_text)
+        update.callback_query.bot.send_message(chat_id=chat_id, text=reply_text)
+        return
+
+    order = update.callback_query.data
+    context.user_data[constant.CART_ARRAY].append(order)
+    if order in context.user_data[constant.CART_ARRAY]:
+        logging.info("DEBUGGER: Added to cart successfully.")
+        context.bot.answer_callback_query(callback_query_id=update.callback_query.id, text="Added to cart")
+    else:
+        logging.info("DEBUGGER: Fail adding to cart.")
+        chat_id = update.effective_user.id
+        reply_text = "Fail adding to cart. Please try again."
+        update.callback_query.bot.send_message(chat_id=chat_id, text=reply_text)
+
 
 
 def place_order(update, context):

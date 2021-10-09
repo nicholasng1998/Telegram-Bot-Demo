@@ -41,6 +41,9 @@ def handle(update, context):
     elif CART == user_text:
         cart_button_response(update, context)
 
+    elif user_text in PIZZAS:
+        logging.info("selected pizza: " + user_text)
+
     elif context.user_data[constant.ADDRESS_REQUIRED]:
         reply_text = 'Your address is: ' + user_text
         keyboard = [

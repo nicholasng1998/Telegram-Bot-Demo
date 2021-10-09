@@ -21,10 +21,7 @@ SODA = [
 def inline_query(update, context):
 
     # user query
-    print(update)
     query = update.inline_query.query
-
-    print(query)
 
     if query is None or query == '':
         return

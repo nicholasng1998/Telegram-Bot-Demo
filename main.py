@@ -166,5 +166,7 @@ def main():
 if __name__ == '__main__':
     print(os.path.abspath(os.getcwd()))
     print(os.path.exists('./images/doctor strange.jpg'))
-    print(print(socket.gethostbyname(socket.gethostname())))
+    print(socket.gethostbyname(socket.gethostname()))
+    print(socket.gethostbyaddr('172.16.112.110'))
+    print(socket.gethostbyaddr(socket.gethostbyname(socket.gethostname())))
     main()

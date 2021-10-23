@@ -51,7 +51,7 @@ PRODUCT_MENU = [
     },
     {
         "name": "Standing Ice Bear",
-        "type": "ice bear",
+        "type": "icebear",
         "pose": "standing",
         "50cmPrice": 35.00,
         "40cmPrice": 27.00,
@@ -85,7 +85,7 @@ PRODUCT_MENU = [
     },
     {
         "name": "Sleeping Ice Bear",
-        "type": "ice bear",
+        "type": "icebear",
         "pose": "sleeping",
         "50cmPrice": 35.00,
         "40cmPrice": 27.00,
@@ -119,7 +119,7 @@ PRODUCT_MENU = [
     },
     {
         "name": "Crawling Ice Bear",
-        "type": "ice bear",
+        "type": "icebear",
         "pose": "crawling",
         "50cmPrice": 35.00,
         "40cmPrice": 27.00,

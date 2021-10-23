@@ -13,11 +13,12 @@ logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 def catalog(update, context):
     logging.info("User: Press Catalog")
     keyboard = [
-        [InlineKeyboardButton('🍕 Pizza', callback_data='pizza'), InlineKeyboardButton('🥖 Sticks', callback_data='sticks')],
-        [InlineKeyboardButton('🍹 Beverages', callback_data='beverages')]
+        [InlineKeyboardButton('Gizzly Bear', callback_data='type.grizzly')],
+        [InlineKeyboardButton('Ice Bear', callback_data='type.iceBear')],
+        [InlineKeyboardButton('Panda Bear', callback_data='type.panda')]
     ]
 
-    reply_text = "📒 Catalog \nThis is the main directory"
+    reply_text = "📒 Catalog \nThis is our main directory. Please select any type of bear below:"
     logging.info("Bot: " + reply_text)
     update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
 
@@ -76,6 +77,7 @@ def small(update, context):
 
 
 def add_cart(update, context):
+    add_to_cart_prefix = "addToCart:"
     logging.info("User: add to cart")
 
     if constant.CART_ARRAY not in context.user_data:
@@ -87,7 +89,9 @@ def add_cart(update, context):
         update.callback_query.bot.send_message(chat_id=chat_id, text=reply_text)
         return
 
-    order = update.callback_query.data
+    callback_data = update.callback_query.data
+    order = str(callback_data).replace(add_to_cart_prefix, '')
+
     context.user_data[constant.CART_ARRAY].append(order)
     if order in context.user_data[constant.CART_ARRAY]:
         logging.info("DEBUGGER: Added to cart successfully.")
@@ -97,7 +101,6 @@ def add_cart(update, context):
         chat_id = update.effective_user.id
         reply_text = "Fail adding to cart. Please try again."
         update.callback_query.bot.send_message(chat_id=chat_id, text=reply_text)
-
 
 
 def place_order(update, context):
@@ -144,3 +147,31 @@ def accept(update, context):
     time.sleep(2)
     context.bot.send_message(chat_id=update.effective_user.id,
                              text="Your order has been successfully delivered! Thank you for using our service. Do not forget to share with your friend.")
+
+
+def type_handlers(update, context):
+    callback_data = update.callback_query.data
+
+    if callback_data is None:
+        logging.info("DEBUGGER: callback data is None.")
+        chat_id = update.effective_user.id
+
+        reply_text = constant.COMMON_ERROR_MESSAGE
+        logging.info("Bot: " + reply_text)
+        update.callback_query.bot.send_message(chat_id=chat_id, text=reply_text)
+        return
+
+    chosen_type = str(callback_data).replace("type.", "")
+    logging.info("User: chosen type {}".format(chosen_type))
+
+    keyboard = [
+        [InlineKeyboardButton(constant.CATALOG, callback_data='catalog')],
+        [InlineKeyboardButton('25 cm', switch_inline_query_current_chat="{} 25cm".format(chosen_type)),
+         InlineKeyboardButton('30 cm', switch_inline_query_current_chat="{} 30cm".format(chosen_type))],
+        [InlineKeyboardButton('40 cm', switch_inline_query_current_chat="{} 40cm".format(chosen_type)),
+         InlineKeyboardButton('50 cm', switch_inline_query_current_chat="{} 50cm".format(chosen_type))]
+    ]
+
+    reply_text = "You selected {}. Please select any size of {}:".format(chosen_type, chosen_type)
+    logging.info("Bot: " + reply_text)
+    update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))

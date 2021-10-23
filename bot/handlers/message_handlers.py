@@ -30,6 +30,7 @@ logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
 
 def handle(update, context):
+
     user_text = update.message.text
     logging.info("User: " + user_text)
 
@@ -74,11 +75,12 @@ def handle(update, context):
 
 def catalog_button_response(update, context):
     keyboard = [
-        [InlineKeyboardButton('🍕 Pizza', callback_data='pizza'), InlineKeyboardButton('🥖 Sticks', callback_data='sticks')],
-        [InlineKeyboardButton('🍹 Beverages', callback_data='beverages')]
+        [InlineKeyboardButton('Gizzly Bear', callback_data='type.grizzly')],
+        [InlineKeyboardButton('Ice Bear', callback_data='type.iceBear')],
+        [InlineKeyboardButton('Panda Bear', callback_data='type.panda')]
     ]
 
-    reply_text = "📒 Catalog \nThis is the main directory"
+    reply_text = "📒 Catalog \nThis is our main directory. Please select any type of bear below:"
     logging.info("Bot: " + reply_text)
     update.message.reply_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
 

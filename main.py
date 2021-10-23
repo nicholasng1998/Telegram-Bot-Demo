@@ -1,69 +1,23 @@
 from telegram.ext import *
 from bot import config
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, KeyboardButton
-from telegramCalendar import telegramcalendar
-from telegram.files.photosize import PhotoSize
-from telegram.utils.types import FileInput
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton
 import pathlib
-import io
-import os
-from PIL import Image
-import socket
 from bot.utils import image
 from bot.config import LOGGING_FORMAT
 import logging
 from bot.handlers import (
     command_handlers,
     message_handlers,
+    photo_handlers,
     inlinequery_handlers,
     callbackquery_handlers
 )
 
 logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
-
-# def first_menu_keyboard():
-#
-#     keyboard = [[InlineKeyboardButton('Submenu 1-1', callback_data='m1_1')],
-#                 [InlineKeyboardButton('Submenu 1-2', callback_data='m1_2')],
-#                 [InlineKeyboardButton('Main menu', callback_data='main')]]
-#     return InlineKeyboardMarkup(keyboard)
-#
-#
-# def second_menu_keyboard():
-#     keyboard = [[InlineKeyboardButton('Submenu 2-1', callback_data='m2_1')],
-#                 [InlineKeyboardButton('Submenu 2-2', callback_data='m2_2')],
-#                 [InlineKeyboardButton('Main menu', callback_data='main')]]
-#     return InlineKeyboardMarkup(keyboard)
-
-# def cal(bot, update):
-#     result, key, step = DetailedTelegramCalendar().process(bot.data)
-#     if not result and key:
-#         bot.edit_message_text(f"Select {LSTEP[step]}",
-#                               bot.message.chat.id,
-#                               bot.message.message_id,
-#                               reply_markup=key)
-#     elif result:
-#         bot.edit_message_text(f"You selected {result}",
-#                               bot.message.chat.id,
-#                               bot.message.message_id)
-
-# def first_menu(bot, update):
-#     print(bot)
-#     print(dir(bot))
-#     telegramCalendar, step = DetailedTelegramCalendar().build()
-#     bot.callback_query.message.edit_text(first_menu_message(),
-#                      reply_markup=telegramCalendar)
-    # bot.callback_query.message.edit_text(first_menu_message(),
-    #                                      reply_markup=first_menu_keyboard())
-
-
-# def second_menu(bot, update):
-#     bot.callback_query.message.edit_text(second_menu_message(),
-#                                          reply_markup=second_menu_keyboard())
-
 # def error(update, context):
 #     print(f'Update {update} caused error {context.error}')
+
 
 def start_command(update, context):
     keyboard = KeyboardButton(text='button here')
@@ -137,13 +91,14 @@ def main():
 
     # add message handlers
     dp.add_handler(MessageHandler(Filters.text, message_handlers.handle))
+    dp.add_handler(MessageHandler(Filters.photo, photo_handlers.handle))
 
     # add inline query handler
     dp.add_handler(InlineQueryHandler(inlinequery_handlers.inline_query, pass_user_data=True))
 
     # add callback query handler
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.catalog, pattern='catalog'))
-    # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.type_handlers, pattern='^type'))
+    dp.add_handler(CallbackQueryHandler(callbackquery_handlers.type_handlers, pattern='^type.'))
     # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.pizza, pattern='pizza'))
     # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.sticks, pattern='sticks'))
     # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.beverages, pattern='beverages'))
@@ -164,9 +119,4 @@ def main():
 
 
 if __name__ == '__main__':
-    print(os.path.abspath(os.getcwd()))
-    print(os.path.exists('./images/doctor strange.jpg'))
-    print(socket.gethostbyname(socket.gethostname()))
-    print(socket.gethostbyaddr('172.16.112.110'))
-    print(socket.gethostbyaddr(socket.gethostbyname(socket.gethostname())))
     main()

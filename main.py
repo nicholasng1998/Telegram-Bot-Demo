@@ -6,7 +6,9 @@ from telegram.files.photosize import PhotoSize
 from telegram.utils.types import FileInput
 import pathlib
 import io
+import os
 from PIL import Image
+import socket
 from bot.utils import image
 from bot.config import LOGGING_FORMAT
 import logging
@@ -141,9 +143,10 @@ def main():
 
     # add callback query handler
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.catalog, pattern='catalog'))
-    dp.add_handler(CallbackQueryHandler(callbackquery_handlers.pizza, pattern='pizza'))
-    dp.add_handler(CallbackQueryHandler(callbackquery_handlers.sticks, pattern='sticks'))
-    dp.add_handler(CallbackQueryHandler(callbackquery_handlers.beverages, pattern='beverages'))
+    # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.type_handlers, pattern='^type'))
+    # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.pizza, pattern='pizza'))
+    # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.sticks, pattern='sticks'))
+    # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.beverages, pattern='beverages'))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.large, pattern='large'))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.medium, pattern='medium'))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.small, pattern='small'))
@@ -161,4 +164,7 @@ def main():
 
 
 if __name__ == '__main__':
+    print(os.path.abspath(os.getcwd()))
+    print(os.path.exists('./images/doctor strange.jpg'))
+    print(print(socket.gethostbyname(socket.gethostname())))
     main()

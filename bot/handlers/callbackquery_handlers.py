@@ -120,12 +120,12 @@ def cash_to_courier(update, context):
 
 
 def cancel_order(update, context):
-    reply_text = 'order cancelled'
+    reply_text = 'Your order has been cancelled'
     context.bot.send_message(chat_id=update.effective_user.id, text=reply_text)
 
 
 def accept_order(update, context):
-    reply_text = 'order placed'
+    reply_text = 'Your order has been placed'
     context.bot.send_message(chat_id=update.effective_user.id, text=reply_text)
     time.sleep(2)
     context.bot.send_message(chat_id=update.effective_user.id, text="Your order is transferred to the assembly!")

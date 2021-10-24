@@ -1,7 +1,5 @@
 from telegram.ext import *
 from bot import config
-import pathlib
-from bot.utils import image
 from bot.config import LOGGING_FORMAT
 import logging
 from bot.handlers import (
@@ -14,6 +12,7 @@ from bot.handlers import (
 )
 
 logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
+
 
 def main():
     # use_context is for backward compatibility
@@ -37,6 +36,8 @@ def main():
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.catalog, pattern="catalog"))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.type_handlers, pattern="^type."))
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.add_cart, pattern="^addToCart."))
+    dp.add_handler(CallbackQueryHandler(callbackquery_handlers.remove_item, pattern="removeItem"))
+    dp.add_handler(CallbackQueryHandler(callbackquery_handlers.remove_item_by_id, pattern="^removeById."))
     # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.place_order, pattern='placeOrder'))
     # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.retype, pattern='retype'))
     # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.confirm, pattern='^confirmAddress'))
@@ -44,7 +45,7 @@ def main():
     # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.cancel, pattern='cancel'))
     # dp.add_handler(CallbackQueryHandler(callbackquery_handlers.accept, pattern='accept'))
 
-    updater.dispatcher.add_error_handler(error_handlers.error_handler)
+    # updater.dispatcher.add_error_handler(error_handlers.error_handler)
     updater.start_polling()
     updater.idle()
 

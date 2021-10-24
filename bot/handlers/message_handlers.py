@@ -87,7 +87,7 @@ def catalog_button_response(update, context):
 
 def cart_button_response(update, context):
     keyboard = [
-        [InlineKeyboardButton('Clear', callback_data='clear'),
+        [InlineKeyboardButton('Remove Item', callback_data='removeItem'),
          InlineKeyboardButton('Place Order', callback_data='placeOrder')]
     ]
 
@@ -98,13 +98,24 @@ def cart_button_response(update, context):
         update.message.reply_text(reply_text)
         return
 
-    reply_text = "Your order are listed below: \n"
-    counter = 0
-    logging.info("DEBUGGER: Number of orders: " + str(len(context.user_data[constant.CART_ARRAY])))
-    order_text_format = "{}. {}\n"
-    for order in context.user_data[constant.CART_ARRAY]:
-        counter += 1
-        reply_text += order_text_format.format(str(counter), order)
+    if len(context.user_data[constant.CART_ARRAY]) == 0:
+        logging.info("DEBUGGER: cart is empty.")
+        reply_text = "Your cart is empty. Add more item to cart now."
+        logging.info("Bot: {}".format(reply_text))
+        update.message.reply_text(reply_text)
+        return
 
+    reply_text = "Your order are listed below: \n"
+    logging.info("DEBUGGER: Number of orders: " + str(len(context.user_data[constant.CART_ARRAY])))
+    order_text_format = "\nItem ID: {} \n" \
+                        "Item Name: {} {}\n" \
+                        "Price: {}\n"
+    total_price = 0
+    for order in context.user_data[constant.CART_ARRAY]:
+        reply_text += order_text_format.format(str(order.get("id")), order.get("name"),
+                                               order.get("size"), order.get("price"))
+        total_price += float(order.get("price"))
+
+    reply_text += "\n\nTotal: RM {}".format(total_price)
     logging.info("Bot: " + reply_text)
     update.message.reply_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))

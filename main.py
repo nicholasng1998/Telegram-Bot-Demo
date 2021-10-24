@@ -15,40 +15,6 @@ from bot.handlers import (
 
 logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
-
-def pizza_menu(bot, context):
-    print(bot)
-    print(dir(bot))
-    print(type(bot))
-    print(type(bot.callback_query))
-    print(type(bot.callback_query.message))
-    file_path = pathlib.Path("images/doctor strange.jpg")
-    if file_path.exists():
-        print('asdasd')
-        print("type: {}".format(type(file_path)))
-        # photo = file_path
-        # photo = "C:/workspace/telegramBot/images/doctor strange.jpg"
-        # bot.send_photo(photo=photo)
-        # print("type: {}".format(type(photo)))
-        # with open("images/doctor strange.jpg", "rb") as image:
-        #     f = image.read()
-        #     b = bytearray(f)
-        # photo1 = InputMediaPhoto("https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg")
-        # photo2 = InputMediaPhoto("https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg")
-        # photo3 = InputMediaPhoto("https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg")
-        # photo4 = InputMediaPhoto("https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg")
-        # image_file = open("images/doctor strange.jpg", 'rb')
-        # image_byte = image_file.read()
-        # image_file.close()
-        # photo1 = InputMediaPhoto(image_byte)
-        photo1 = image.upload_local_photo("images/doctor strange.jpg")
-        bot.callback_query.message.reply_media_group([photo1])
-        # bot.callback_query.message.reply_photo(photo="https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg")
-    print("no la")
-    # bot.callback_query.message.reply_text('Choose a date:',
-    #                                      photo_url="https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg")
-
-
 def main():
     # use_context is for backward compatibility
     updater = Updater(config.API_KEY, use_context=True)

@@ -8,6 +8,12 @@ CATALOG = "📒 Catalog"
 ORDER_HISTORY = "📄 Order History"
 MY_PROFILE = "👤 My Profile"
 CART = "🛒 Cart"
+INLINE_KEYBOARDS = [
+    CATALOG,
+    ORDER_HISTORY,
+    MY_PROFILE,
+    CART
+]
 
 # Validators
 CART_ARRAY = "cartArray"
@@ -39,6 +45,7 @@ COMMON_ERROR_MESSAGE = "System has error occurred. Please try again later."
 PRODUCT_MENU = [
     # standing
     {
+        "id": "standingGrizzly",
         "name": "Standing Grizzly",
         "type": "grizzly",
         "pose": "standing",
@@ -50,6 +57,7 @@ PRODUCT_MENU = [
         "photoFileId": "AgACAgUAAxkBAAIE2GF0NucgX2jhUJ16GW05e8G06d7WAAJxrTEbi6SgV-yz9qdts-7UAQADAgADcwADIQQ"
     },
     {
+        "id": "standingIceBear",
         "name": "Standing Ice Bear",
         "type": "icebear",
         "pose": "standing",
@@ -61,6 +69,7 @@ PRODUCT_MENU = [
         "photoFileId": "AgACAgUAAxkBAAIE2WF0Nv72teAH9ksfqlPFMBw_0t-hAAJzrTEbi6SgVwuoCP-J84-_AQADAgADcwADIQQ"
     },
     {
+        "id": "standingBear",
         "name": "Standing Panda",
         "type": "panda",
         "pose": "standing",
@@ -73,6 +82,7 @@ PRODUCT_MENU = [
     },
     # sleeping
     {
+        "id": "sleepingGrizzly",
         "name": "Sleeping Grizzly",
         "type": "grizzly",
         "pose": "sleeping",
@@ -84,6 +94,7 @@ PRODUCT_MENU = [
         "photoFileId": "AgACAgUAAxkBAAIE22F0Nzoc7TRniDVtbb-VRHjDiTAaAAJ1rTEbi6SgV6old2lNMFqZAQADAgADcwADIQQ"
     },
     {
+        "id": "sleepingIceBear",
         "name": "Sleeping Ice Bear",
         "type": "icebear",
         "pose": "sleeping",
@@ -95,6 +106,7 @@ PRODUCT_MENU = [
         "photoFileId": "AgACAgUAAxkBAAIE3GF0N2C1oUa3fnzAEaJgSvLLUv4aAAJ2rTEbi6SgVycIufVA0QEOAQADAgADcwADIQQ"
     },
     {
+        "id": "sleepingPanda",
         "name": "Sleeping Panda",
         "type": "panda",
         "pose": "sleeping",
@@ -107,6 +119,7 @@ PRODUCT_MENU = [
     },
     # crawling
 {
+        "id": "crawlingGrizzly",
         "name": "Crawling Grizzly",
         "type": "grizzly",
         "pose": "crawling",
@@ -118,6 +131,7 @@ PRODUCT_MENU = [
         "photoFileId": "AgACAgUAAxkBAAIExmF0M1OBP1gQd7P8XuGZFyMFKp_cAAJrrTEbi6SgV4l0NBXZG1bIAQADAgADcwADIQQ"
     },
     {
+        "id": "crawlingIceBear",
         "name": "Crawling Ice Bear",
         "type": "icebear",
         "pose": "crawling",
@@ -129,6 +143,7 @@ PRODUCT_MENU = [
         "photoFileId": "AgACAgUAAxkBAAIE3mF0N48blP0iMIAkXV71rRUm4mZHAAJ4rTEbi6SgV-rDw0O9xQaLAQADAgADcwADIQQ"
     },
     {
+        "id": "crawlingPanda",
         "name": "Crawling Panda",
         "type": "panda",
         "pose": "crawling",

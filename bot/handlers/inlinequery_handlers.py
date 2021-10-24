@@ -5,7 +5,7 @@ from telegram import (
     InlineQueryResultDocument,
     InlineQueryResultPhoto,
     InlineQueryResultCachedPhoto,
-InlineQueryResultCachedDocument,
+    InlineQueryResultCachedDocument,
     InlineKeyboardButton,
     ParseMode
 )
@@ -74,6 +74,8 @@ logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 #         context.bot.answer_inline_query(update.inline_query.id, results)
 
 def inline_query(update, context):
+    logging.info("DEBUGGER: Enter inline query handlers.")
+
     # user query
     query = str(update.inline_query.query)
 
@@ -106,13 +108,14 @@ def inline_query(update, context):
     results = []
     for product in products:
         keyboard = [
-            [InlineKeyboardButton('🛒 Add To Cart', callback_data=product.get("name"))]
+            [InlineKeyboardButton('🛒 Add To Cart', callback_data="addToCart.{} {}"
+                                  .format(product.get("id"), product_size))]
         ]
 
         caption = "Product Name: {} \n" \
                   "Size: {} \n" \
                   "Price: RM {} \n" \
-                  "Description: {} \n"\
+                  "Description: {} \n" \
             .format(product.get("name"),
                     product_size,
                     product.get("{}Price".format(product_size)),

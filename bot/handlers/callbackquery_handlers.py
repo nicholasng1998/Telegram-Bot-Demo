@@ -77,7 +77,7 @@ def small(update, context):
 
 
 def add_cart(update, context):
-    add_to_cart_prefix = "addToCart:"
+    add_to_cart_prefix = "addToCart."
     logging.info("User: add to cart")
 
     if constant.CART_ARRAY not in context.user_data:
@@ -90,17 +90,42 @@ def add_cart(update, context):
         return
 
     callback_data = update.callback_query.data
-    order = str(callback_data).replace(add_to_cart_prefix, '')
+    logging.info("DEBUGGING: callback data {}".format(callback_data))
+    user_query = str(callback_data).replace(add_to_cart_prefix, "")
+    product_id = ""
+    product_size = ""
+
+    try:
+        product_id, product_size = user_query.split(" ")
+    except Exception:
+        logging.info("DEBUGGER: fail to split user query into product id and size.")
+        chat_id = update.effective_user.id
+
+        reply_text = constant.COMMON_ERROR_MESSAGE
+        logging.info("Bot: " + reply_text)
+        update.callback_query.bot.send_message(chat_id=chat_id, text=reply_text)
+        return
+
+    logging.info("DEBUGGER: client add item {} {} to cart".format(product_id, product_size))
+
+    product_menu = constant.PRODUCT_MENU
+    products = list(filter(lambda product_menu: product_menu["id"] == product_id, product_menu))
+
+    if len(products) == 0:
+        logging.info("DEBUGGER: no products with id {} found for query.".format(product_id))
+        return
+
+    product = products[0]
+
+    order = {
+        "name": product.get("name"),
+        "size": product_size,
+        "price": product.get("{}Price".format(product_size))
+    }
 
     context.user_data[constant.CART_ARRAY].append(order)
-    if order in context.user_data[constant.CART_ARRAY]:
-        logging.info("DEBUGGER: Added to cart successfully.")
-        context.bot.answer_callback_query(callback_query_id=update.callback_query.id, text="Added to cart")
-    else:
-        logging.info("DEBUGGER: Fail adding to cart.")
-        chat_id = update.effective_user.id
-        reply_text = "Fail adding to cart. Please try again."
-        update.callback_query.bot.send_message(chat_id=chat_id, text=reply_text)
+    logging.info("DEBUGGER: Added to cart successfully.")
+    context.bot.answer_callback_query(callback_query_id=update.callback_query.id, text="Added to cart")
 
 
 def place_order(update, context):

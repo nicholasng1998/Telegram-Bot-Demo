@@ -1,30 +1,11 @@
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    ParseMode,
-    ChatAction
+    ParseMode
 )
 from bot import constant
 from bot.config import LOGGING_FORMAT
 import logging
-import time
-
-# main menu
-CATALOG = "📒 Catalog"
-ORDER_HISTORY = "📄 Order History"
-MY_PROFILE = "👤 My Profile"
-CART = "🛒 Cart"
-
-# catalog sub menu
-PIZZA = 'Pizza'
-STICKS = 'Sticks'
-BEVERAGES = 'Beverages'
-
-PIZZAS = [
-    'Buffalo Chicken Mac N Cheese (L)$5.00',
-    'Ragin Pepperoni (L)$5.00',
-    'Mac n Cheese (L)$5.00'
-]
 
 logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
@@ -35,41 +16,29 @@ def handle(update, context):
     logging.info("User: " + user_text)
 
     # catalog button pressed
-    if CATALOG == user_text:
+    if constant.CATALOG == user_text:
         catalog_button_response(update, context)
 
     # cart button pressed
-    elif CART == user_text:
+    elif constant.CART == user_text:
         cart_button_response(update, context)
 
-    elif user_text in PIZZAS:
-        logging.info("selected pizza: " + user_text)
-
-    elif context.user_data[constant.ADDRESS_REQUIRED]:
-        reply_text = 'Your address is: ' + user_text
+    elif constant.ADDRESS_REQUIRED in context.user_data and context.user_data[constant.ADDRESS_REQUIRED]:
+        logging.info("DEBUGGER: user entered order mailing address")
+        reply_text = 'Your address is: \n' \
+                     '{}'.format(user_text)
         keyboard = [
             [InlineKeyboardButton('Retype', callback_data='retype'),
-             InlineKeyboardButton('Confirm', callback_data='confirmAddress' + user_text)]
+             InlineKeyboardButton('Confirm', callback_data='confirmAddress.{}'.format(user_text))]
         ]
         update.message.reply_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
-    elif context.user_data[constant.COMMENT_REQUIRED]:
-        context.user_data['comment_text'] = user_text
-        summary = '''
-        Your order
-        Cart: ''' + ', '.join(context.user_data['cart']) \
-                  + "Address: " + context.user_data['address'] \
-                  + "Payment Method: " + context.user_data['payment_method'] \
-                  + "Comment: " + context.user_data['comment_text']
-        keyboard = [
-            [InlineKeyboardButton('Cancel', callback_data='cancel'),
-             InlineKeyboardButton('Accept', callback_data='accept')]
-        ]
-        context.user_data['commentRequired'] = False
-        update.message.reply_text(summary, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode=ParseMode.HTML)
+    elif constant.COMMENT_REQUIRED in context.user_data and context.user_data[constant.COMMENT_REQUIRED]:
+        logging.info("DEBUGGER: user entered order comment")
+        context.user_data[constant.USER_COMMENT] = user_text
+        generate_summary(update, context)
+
     else:
-        if not context.user_data:
-            print('kosong')
-        print('not ko song')
+        logging.info("DEBUGGER: Enter else statement")
         update.message.reply_text(constant.COMMAND_NOT_FOUND, parse_mode=ParseMode.HTML)
 
 
@@ -119,3 +88,46 @@ def cart_button_response(update, context):
     reply_text += "\n\nTotal: RM {}".format(total_price)
     logging.info("Bot: " + reply_text)
     update.message.reply_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+def generate_summary(update, context):
+    logging.info("DEBUGGER: Generate order summary.")
+
+    if constant.CART_ARRAY not in context.user_data:
+        logging.info("DEBUGGER: cart is not in context user data")
+        reply_text = "Your previous session has ended. Please type /start to restart the session. Thank you~"
+        logging.info("Bot: " + reply_text)
+        update.message.reply_text(reply_text)
+        return
+
+    if len(context.user_data[constant.CART_ARRAY]) == 0:
+        logging.info("DEBUGGER: cart is empty.")
+        reply_text = "Your cart is empty. Add more item to cart now."
+        logging.info("Bot: {}".format(reply_text))
+        update.message.reply_text(reply_text)
+        return
+
+    reply_text = "Your order are listed below: \n"
+    logging.info("DEBUGGER: Number of orders: " + str(len(context.user_data[constant.CART_ARRAY])))
+    order_text_format = "\nItem ID: {} \n" \
+                        "Item Name: {} {}\n" \
+                        "Price: {}\n"
+    total_price = 0
+    for order in context.user_data[constant.CART_ARRAY]:
+        reply_text += order_text_format.format(str(order.get("id")), order.get("name"),
+                                               order.get("size"), order.get("price"))
+        total_price += float(order.get("price"))
+
+    reply_text += "\n\nTotal: RM {}".format(total_price)
+    reply_text += "\nAddress: {}" \
+                  "\nPayment Method: {}" \
+                  "\nComment: {}".format(context.user_data[constant.USER_ADDRESS],
+                                         context.user_data[constant.PAYMENT_METHOD],
+                                         context.user_data[constant.USER_COMMENT])
+
+    keyboard = [
+        [InlineKeyboardButton('Cancel', callback_data='cancelOrder'),
+         InlineKeyboardButton('Accept', callback_data='acceptOrder')]
+    ]
+    context.user_data[constant.COMMENT_REQUIRED] = False
+    update.message.reply_text(text=reply_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode=ParseMode.HTML)

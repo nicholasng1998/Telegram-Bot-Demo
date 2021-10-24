@@ -23,59 +23,6 @@ def catalog(update, context):
     update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
 
 
-def pizza(update, context):
-    logging.info("User: Press 🍕 Pizza")
-    keyboard = [
-        [InlineKeyboardButton('Catalog', callback_data='catalog')],
-        [InlineKeyboardButton('Large 14', switch_inline_query_current_chat="Large"),
-         InlineKeyboardButton('Medium 12', switch_inline_query_current_chat='pizza medium')],
-        [InlineKeyboardButton('Small 9', switch_inline_query_current_chat='pizza small')]
-    ]
-
-    reply_text = "Choose your pizza size: "
-    logging.info("Bot: " + reply_text)
-    update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
-
-
-def sticks(update, context):
-    logging.info("User: Press 🥖 Sticks")
-    keyboard = [
-        [InlineKeyboardButton('Catalog', callback_data='catalog')],
-        [InlineKeyboardButton('Garlic Twisty Bread', switch_inline_query_current_chat="garlic twisty bread"),
-         InlineKeyboardButton('Cheesy Cheddar Stix', switch_inline_query_current_chat="chessy cheddar stix")]
-    ]
-
-    reply_text = "Choose your stix: "
-    logging.info("Bot: " + reply_text)
-    update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
-
-
-def beverages(update, context):
-    logging.info("User: Press 🍹 Beverages")
-    keyboard = [
-        [InlineKeyboardButton('Catalog', callback_data='catalog')],
-        [InlineKeyboardButton('Soda', switch_inline_query_current_chat="soda")]
-    ]
-
-    context.bot.answer_callback_query(callback_query_id=update.callback_query.id, text="processing...")
-
-    reply_text = "Choose your drinks: "
-    logging.info("Bot: " + reply_text)
-    update.callback_query.message.edit_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard))
-
-
-def large(update, context):
-    update.callback_query.message.reply_text('large')
-
-
-def medium(update, context):
-    update.message.reply_text('medium')
-
-
-def small(update, context):
-    update.message.reply_text('small')
-
-
 def add_cart(update, context):
     add_to_cart_prefix = "addToCart."
     logging.info("User: add to cart")
@@ -130,40 +77,54 @@ def add_cart(update, context):
 
 
 def place_order(update, context):
-    context.user_data['addressRequired'] = True
-    update.callback_query.message.reply_text('Please send me your address as example below. (Address: No 1, Lorong ..)')
+    logging.info("User: wanna place order.")
+
+    if len(context.user_data[constant.CART_ARRAY]) == 0:
+        logging.info("DEBUGGER: cart is empty.")
+        reply_text = "Your cart is empty. Add more item to cart now."
+        logging.info("Bot: {}".format(reply_text))
+        update.callback_query.message.reply_text(reply_text)
+        return
+
+    context.user_data[constant.ADDRESS_REQUIRED] = True
+    update.callback_query.message.reply_text('Please write your mailing address.')
 
 
-def retype(update, context):
+def retype_address(update, context):
+    logging.info("User: retype mailing address.")
     place_order(update, context)
 
 
-def confirm(update, context):
+def confirm_address(update, context):
     callback_data = update.callback_query.data
-    address = str(callback_data).replace("confirmAddress", '')
-    context.user_data['address'] = address
-    reply_text = 'Select a Payment Method'
+    logging.info("DEBUGGER: callback data is {}".format(callback_data))
+
+    address = str(callback_data).replace("confirmAddress.", "")
+    logging.info("DEBUGGER: client address is {}".format(address))
+
+    context.user_data[constant.USER_ADDRESS] = address
+    reply_text = 'Select a Payment Method:'
     keyboard = [
         [InlineKeyboardButton('Cash to the courier', callback_data='cashToCourier')]
     ]
-    context.user_data['addressRequired'] = False
+    context.user_data[constant.ADDRESS_REQUIRED] = False
     context.bot.send_message(chat_id=update.effective_user.id, text=reply_text,
                              reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 def cash_to_courier(update, context):
-    context.user_data['payment_method'] = 'Cash to Courier'
-    context.user_data['commentRequired'] = True
-    reply_text = 'Please write a comment to the order: For example, an additional telephone number for contacting.'
+    context.user_data[constant.PAYMENT_METHOD] = constant.CASH_TO_COURIER
+    context.user_data[constant.COMMENT_REQUIRED] = True
+    reply_text = 'Please write a comment to the order: \nFor example, an additional telephone number for contacting.'
     context.bot.send_message(chat_id=update.effective_user.id, text=reply_text)
 
 
-def cancel(update, context):
+def cancel_order(update, context):
     reply_text = 'order cancelled'
     context.bot.send_message(chat_id=update.effective_user.id, text=reply_text)
 
 
-def accept(update, context):
+def accept_order(update, context):
     reply_text = 'order placed'
     context.bot.send_message(chat_id=update.effective_user.id, text=reply_text)
     time.sleep(2)

@@ -15,10 +15,14 @@ INLINE_KEYBOARDS = [
     CART
 ]
 
-# Validators
+# Validators & User Data
 CART_ARRAY = "cartArray"
 ADDRESS_REQUIRED = "addressRequired"
 COMMENT_REQUIRED = "commentRequired"
+USER_ADDRESS = "userAddress"
+PAYMENT_METHOD = "paymentMethod"
+CASH_TO_COURIER = "cashToCourier"
+USER_COMMENT = "userComment"
 
 # General
 GREETING_MESSAGE = '''

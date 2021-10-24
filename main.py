@@ -1,16 +1,13 @@
 from telegram.ext import *
 from bot import config
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton
 import pathlib
 from bot.utils import image
 from bot.config import LOGGING_FORMAT
-from bot.filters.inline_button_filters import InlineButtonFilter
 import logging
 from bot.handlers import (
     command_handlers,
     error_handlers,
     message_handlers,
-    custom_message_handlers,
     photo_handlers,
     inlinequery_handlers,
     callbackquery_handlers

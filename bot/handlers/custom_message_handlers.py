@@ -5,4 +5,5 @@ logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
 
 def handle(update, context):
-    logging.info("DEBUGGER: Enter photo handlers")
+    logging.info("DEBUGGER: custom message from user -> {}".format(update.message))
+

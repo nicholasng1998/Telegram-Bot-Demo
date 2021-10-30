@@ -48,14 +48,14 @@ def main(active_profile: str):
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.accept_order, pattern='acceptOrder'))
 
     updater.dispatcher.add_error_handler(error_handlers.error_handler)
-    if active_profile == "local":
-        updater.start_polling()
-    elif active_profile == "production":
-        logging.info("start web hook...")
-        updater.start_webhook(listen="0.0.0.0",
-                              port=int(os.environ.get('PORT', '8443')),
-                              url_path=API_TOKEN,
-                              webhook_url="https://nicholas-telegram-bot-demo.herokuapp.com/" + API_TOKEN)
+    # if active_profile == "local":
+    #     updater.start_polling()
+    # elif active_profile == "production":
+    logging.info("start web hook...")
+    updater.start_webhook(listen="0.0.0.0",
+                          port=int(os.environ.get('PORT', '8443')),
+                          url_path=API_TOKEN,
+                          webhook_url="https://nicholas-telegram-bot-demo.herokuapp.com/" + API_TOKEN)
     updater.idle()
 
 

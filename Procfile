@@ -1,1 +1,1 @@
-worker: python main.py --profile production
+worker: python main.py

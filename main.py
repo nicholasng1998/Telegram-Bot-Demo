@@ -3,7 +3,7 @@ import argparse
 import os
 from telegram.ext import *
 from bot import config
-from bot.config import LOGGING_FORMAT, API_TOKEN, BOT_1, BOT_ID
+from bot.config import LOGGING_FORMAT, API_TOKEN, BOT_1, BOT_ID, API_KEY
 from bot.handlers import (
     command_handlers,
     error_handlers,
@@ -18,7 +18,7 @@ logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
 def main(active_profile: str):
     # use_context is for backward compatibility
-    updater = Updater(config.API_KEY, use_context=True)
+    updater = Updater(API_KEY, use_context=True)
 
     # access dispatcher
     dp = updater.dispatcher
@@ -48,14 +48,14 @@ def main(active_profile: str):
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.accept_order, pattern='acceptOrder'))
 
     updater.dispatcher.add_error_handler(error_handlers.error_handler)
-    # if active_profile == "local":
-    #     updater.start_polling()
-    # elif active_profile == "production":
-    logging.info("start web hook...")
-    updater.start_webhook(listen="0.0.0.0",
-                          port=int(os.environ.get('PORT', '8443')),
-                          url_path=BOT_ID,
-                          webhook_url="https://nicholas-telegram-bot-demo.herokuapp.com/" + BOT_ID)
+    if active_profile == "local":
+        updater.start_polling()
+    elif active_profile == "production":
+        logging.info("start web hook...")
+        updater.start_webhook(listen="0.0.0.0",
+                              port=int(os.environ.get('PORT', '8443')),
+                              url_path=API_KEY,
+                              webhook_url="https://nicholas-telegram-bot-demo.herokuapp.com/" + API_KEY)
     updater.idle()
 
 

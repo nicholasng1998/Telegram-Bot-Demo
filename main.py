@@ -1,7 +1,9 @@
+import logging
+import argparse
+import os
 from telegram.ext import *
 from bot import config
 from bot.config import LOGGING_FORMAT
-import logging
 from bot.handlers import (
     command_handlers,
     error_handlers,
@@ -13,8 +15,10 @@ from bot.handlers import (
 
 logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
+HEROKU_API_KEY = "fb40ca56-c4c6-447b-b843-c7a7e1adc7a3"
 
-def main():
+
+def main(profile):
     # use_context is for backward compatibility
     updater = Updater(config.API_KEY, use_context=True)
 
@@ -46,9 +50,21 @@ def main():
     dp.add_handler(CallbackQueryHandler(callbackquery_handlers.accept_order, pattern='acceptOrder'))
 
     updater.dispatcher.add_error_handler(error_handlers.error_handler)
-    updater.start_polling()
+    if profile == "local":
+        updater.start_polling()
+    elif profile == "production":
+        logging.info("start web hook...")
+        updater.start_webhook(listen="0.0.0.0",
+                              port=int(os.environ.get('PORT', '8443')),
+                              url_path=HEROKU_API_KEY,
+                              webhook_url="https://nicholas-telegram-bot-demo.herokuapp.com/" + HEROKU_API_KEY)
     updater.idle()
 
 
 if __name__ == '__main__':
-    main()
+    # Create the parser
+    parser = argparse.ArgumentParser(description='Profile')
+    parser.add_argument("--profile", type=str, default="local", help="Write your profile.")
+    profile = parser.parse_args().profile
+    logging.info("Active profile: {}".format(profile))
+    main(profile)

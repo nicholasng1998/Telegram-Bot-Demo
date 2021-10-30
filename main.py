@@ -3,7 +3,7 @@ import argparse
 import os
 from telegram.ext import *
 from bot import config
-from bot.config import LOGGING_FORMAT, API_TOKEN, BOT_1
+from bot.config import LOGGING_FORMAT, API_TOKEN, BOT_1, BOT_ID
 from bot.handlers import (
     command_handlers,
     error_handlers,
@@ -54,8 +54,8 @@ def main(active_profile: str):
     logging.info("start web hook...")
     updater.start_webhook(listen="0.0.0.0",
                           port=int(os.environ.get('PORT', '8443')),
-                          url_path=BOT_1,
-                          webhook_url="https://nicholas-telegram-bot-demo.herokuapp.com/" + BOT_1)
+                          url_path=BOT_ID,
+                          webhook_url="https://nicholas-telegram-bot-demo.herokuapp.com/" + BOT_ID)
     updater.idle()
 
 

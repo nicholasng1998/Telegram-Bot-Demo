@@ -1,3 +1,6 @@
+import logging
+import sqlite3
+from bot import sql_constant
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -5,7 +8,6 @@ from telegram import (
 )
 from bot import constant
 from bot.config import LOGGING_FORMAT
-import logging
 
 logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
@@ -22,6 +24,43 @@ def handle(update, context):
     # cart button pressed
     elif constant.CART == user_text:
         cart_button_response(update, context)
+
+    # my profile button pressed
+    elif constant.MY_PROFILE == user_text:
+        # TODO
+        chat_id = update.message.chat.id
+        con = sqlite3.connect("bot_data.db")
+        cursor_obj = con.cursor()
+        cursor_obj.execute(sql_constant.SELECT_USER.format(chat_id))
+        users = cursor_obj.fetchall()
+        if len(users) > 0:
+            user_id, name, address, chat_id = users[0]
+            logging.info("User chat id: {}".format(str(chat_id)))
+            my_profile_format = "Name: {} \n".format(name)
+            if address is not None:
+                my_profile_format = my_profile_format + "Address {} \n".format(address)
+                keyboard = [
+                    [InlineKeyboardButton('Edit Address', callback_data='editAddress')]
+                ]
+                update.message.reply_text(text=my_profile_format, reply_markup=InlineKeyboardMarkup(keyboard),
+                                          parse_mode=ParseMode.HTML)
+            elif address is None:
+                keyboard = [
+                    [InlineKeyboardButton('Add Address', callback_data='addAddress')]
+                ]
+                update.message.reply_text(text=my_profile_format, reply_markup=InlineKeyboardMarkup(keyboard),
+                                          parse_mode=ParseMode.HTML)
+
+        elif len(users) == 0:
+            reply_text = constant.COMMON_ERROR_MESSAGE
+            logging.info("Bot: " + reply_text)
+            update.message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+        con.close()
+
+    # order history button pressed
+    elif constant.ORDER_HISTORY == user_text:
+        # TODO
+        return
 
     elif constant.ADDRESS_REQUIRED in context.user_data and context.user_data[constant.ADDRESS_REQUIRED]:
         logging.info("DEBUGGER: user entered order mailing address")

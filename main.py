@@ -1,9 +1,10 @@
 import logging
 import argparse
 import os
+import sqlite3
+from bot import sql_constant
 from telegram.ext import *
-from bot import config
-from bot.config import LOGGING_FORMAT, API_TOKEN, BOT_1, BOT_ID, API_KEY
+from bot.config import LOGGING_FORMAT, API_KEY
 from bot.handlers import (
     command_handlers,
     error_handlers,
@@ -16,9 +17,18 @@ from bot.handlers import (
 logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
 
-def main(active_profile: str):
+def main():
+
+    # create persistence using sqlite3
+    con = sqlite3.connect("bot_data.db")
+    logging.info("Connection is established: Database is created in memory")
+    init_db(con)
+
+    # create persistence using Pickle Files method
+    # bot_persistence = PicklePersistence(filename="bot_data")
+
     # use_context is for backward compatibility
-    updater = Updater(API_KEY, use_context=True)
+    updater = Updater(API_KEY, use_context=True, persistence=None)
 
     # access dispatcher
     dp = updater.dispatcher
@@ -59,10 +69,19 @@ def main(active_profile: str):
     updater.idle()
 
 
+def init_db(con):
+    cursor_obj = con.cursor()
+    cursor_obj.execute(sql_constant.USER_TABLE)
+    cursor_obj.execute(sql_constant.ORDER_TABLE)
+    con.commit()
+    logging.info("DB initialized.")
+    con.close()
+    logging.info("DB closed.")
+
+
 if __name__ == '__main__':
     # Create the parser
     parser = argparse.ArgumentParser(description='Profile')
     parser.add_argument("--profile", type=str, default="local", help="Write your profile.")
     active_profile = parser.parse_args().profile
-    logging.info("Active profile: {}".format(active_profile))
-    main(active_profile)
+    main()

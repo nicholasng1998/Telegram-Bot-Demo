@@ -32,7 +32,7 @@ To start the journey, you can type /start.
 To get more info, you can type /help.
 📱 If you have any question, you are always welcome to pm me:
 👇👇👇
-https://m.me/
+https://m.me/devauto.solution
 '''
 
 HELP_MESSAGE = '''

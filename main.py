@@ -1,8 +1,6 @@
 import logging
 import argparse
 import os
-import sqlite3
-from sqlalchemy import create_engine
 from bot import config
 from bot import sql_constant
 from telegram.ext import *
@@ -22,7 +20,7 @@ logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 def main():
 
     # Apply ORM using SQLAlchemy
-    engine = create_engine(config.POSTGRES_DB_CONNECTION_STRING_LOCAL, echo=True)
+    # engine = create_engine(config.POSTGRES_DB_CONNECTION_STRING_LOCAL, echo=True)
 
     # create persistence using sqlite3
     # con = sqlite3.connect("bot_data.db")

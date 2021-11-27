@@ -7,3 +7,7 @@ BOT_1 = "bot{}:{}".format(BOT_ID, API_TOKEN)
 API_KEY = "{}:{}".format(BOT_ID, API_TOKEN)
 LOGGING_FORMAT = "%(asctime)s | %(filename)s | %(levelname)s | %(message)s"
 POSTGRES_DB_CONNECTION_STRING_LOCAL = "postgresql://postgres:root@localhost:5433/postgres"
+BOT_ID2 = "2070325837"
+API_TOKEN2 = "AAE6-PWC_7PJW5oj7rK4OevlSCRyaCLD5uM"
+BOT_2 = "bot{}:{}".format(BOT_ID2, API_TOKEN2)
+API_KEY2 = "{}:{}".format(BOT_ID2, API_TOKEN2)

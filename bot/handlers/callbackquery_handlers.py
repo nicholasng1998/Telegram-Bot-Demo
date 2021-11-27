@@ -55,7 +55,7 @@ def add_cart(update, context):
 
     logging.info("DEBUGGER: client add item {} {} to cart".format(product_id, product_size))
 
-    product_menu = constant.PRODUCT_MENU
+    product_menu = constant.DEVAUTO_PRODUCT_MENU
     products = list(filter(lambda product_menu: product_menu["id"] == product_id, product_menu))
 
     if len(products) == 0:

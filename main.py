@@ -4,7 +4,7 @@ import os
 from bot import config
 from bot import sql_constant
 from telegram.ext import *
-from bot.config import LOGGING_FORMAT, API_KEY
+from bot.config import LOGGING_FORMAT, API_KEY2, API_KEY2
 from bot.handlers import (
     command_handlers,
     error_handlers,
@@ -31,7 +31,7 @@ def main():
     # bot_persistence = PicklePersistence(filename="bot_data")
 
     # use_context is for backward compatibility
-    updater = Updater(API_KEY, use_context=True, persistence=None)
+    updater = Updater(API_KEY2, use_context=True, persistence=None)
 
     # access dispatcher
     dp = updater.dispatcher
@@ -67,8 +67,8 @@ def main():
         logging.info("start web hook...")
         updater.start_webhook(listen="0.0.0.0",
                               port=int(os.environ.get('PORT', '8443')),
-                              url_path=API_KEY,
-                              webhook_url="https://nicholas-telegram-bot-demo.herokuapp.com/" + API_KEY)
+                              url_path=API_KEY2,
+                              webhook_url="https://nicholas-telegram-bot-demo.herokuapp.com/" + API_KEY2)
     updater.idle()
 
 

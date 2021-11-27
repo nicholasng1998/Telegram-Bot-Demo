@@ -5,4 +5,5 @@ logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
 
 def handle(update, context):
+    print(update)
     logging.info("DEBUGGER: Enter photo handlers")

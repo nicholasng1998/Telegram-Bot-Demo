@@ -35,7 +35,7 @@ def inline_query(update, context):
         update.callback_query.bot.send_message(chat_id=chat_id, text=reply_text)
         return
 
-    product_menu = constant.PRODUCT_MENU
+    product_menu = constant.DEVAUTO_PRODUCT_MENU
     products = list(filter(lambda product_menu: product_menu['type'] == product_type, product_menu))
 
     if len(products) == 0:

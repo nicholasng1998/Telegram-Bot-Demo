@@ -34,22 +34,27 @@ def start(update, context):
     con.close()
 
     # MxN matrix that able to arrange button
+    # keyboard_buttons = [
+    #     [KeyboardButton(constant.CATALOG), KeyboardButton(constant.CART)],
+    #     [KeyboardButton(constant.MY_PROFILE), KeyboardButton(constant.ORDER_HISTORY)]
+    # ]
+
     keyboard_buttons = [
-        [KeyboardButton(constant.CATALOG), KeyboardButton(constant.CART)],
-        [KeyboardButton(constant.MY_PROFILE), KeyboardButton(constant.ORDER_HISTORY)]
+        [KeyboardButton(constant.CATALOG), KeyboardButton(constant.CART)]
     ]
 
     # sending chat action Typing...
     chat_id = update.effective_user.id
     telegram_bot = context.bot
     telegram_bot.sendChatAction(chat_id=chat_id, action=ChatAction.TYPING)
-    time.sleep(0.5)
 
     logging.info("Bot: " + constant.GREETING_MESSAGE)
     update.message.reply_text(
         constant.GREETING_MESSAGE,
         reply_markup=ReplyKeyboardMarkup(keyboard_buttons, resize_keyboard=True)
     )
+
+    telegram_bot.send_photo(chat_id=chat_id, photo=constant.POSTER_FILE_ID)
 
 
 def helps(update, context):

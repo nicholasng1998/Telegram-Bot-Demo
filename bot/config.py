@@ -6,3 +6,4 @@ CHANNEL_PREFIX = "-100"
 BOT_1 = "bot{}:{}".format(BOT_ID, API_TOKEN)
 API_KEY = "{}:{}".format(BOT_ID, API_TOKEN)
 LOGGING_FORMAT = "%(asctime)s | %(filename)s | %(levelname)s | %(message)s"
+POSTGRES_DB_CONNECTION_STRING_LOCAL = "postgresql://postgres:root@localhost:5433/postgres"

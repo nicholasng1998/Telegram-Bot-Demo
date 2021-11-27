@@ -45,6 +45,9 @@ View Catalog 👉 Choose Item 👉 Add Cart 👉 Place Order
 COMMAND_NOT_FOUND = "Sorry, I\'m worry that I can\'t help you on that."
 COMMON_ERROR_MESSAGE = "System has error occurred. Please try again later."
 
+# Poster file id
+POSTER_FILE_ID = "AgACAgUAAxkBAAIJCGGPhXNAspCTSCR2myUwI2XQ79aGAAKkrjEbYtl4VBf4-lz0GZ2xAQADAgADbQADIgQ"
+
 # Product Menu
 PRODUCT_MENU = [
     # standing
